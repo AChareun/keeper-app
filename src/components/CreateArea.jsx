@@ -1,29 +1,50 @@
 import React from 'react';
+import Zoom from '@material-ui/core/Zoom';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const CreateArea = (props) => {
-  const [inputValues, setValue] = React.useState({title: '', content: ''});
+  const [isExtended, setExtended] = React.useState(false);
+  const [inputValues, setValue] = React.useState({ title: '', content: '' });
 
   const valuesOnChange = (e) => {
-    const inputName = e.target.name;
-    const newValue = e.target.value;
+    const { name, value } = e.target;
 
     setValue((prev) => {
-      return {...prev, [inputName]: newValue};
-    })
-  }
+      return { ...prev, [name]: value };
+    });
+  };
 
   const addNote = () => {
     props.onAdd(inputValues);
-    setValue({title: '', content: ''});
-  }
+    setValue({ title: '', content: '' });
+  };
 
   return (
-    <form>
-      <input onChange={valuesOnChange} value={inputValues.title} name="title" placeholder="Title"/>
-      <textarea onChange={valuesOnChange} value={inputValues.content} name="content" placeholder="Take a note..."/>
-      <button onClick={addNote} type="button">ADD</button>
+    <form className="create-note">
+      {isExtended && (
+        <input
+          onChange={valuesOnChange}
+          value={inputValues.title}
+          name="title"
+          placeholder="Title"
+        />
+      )}
+      <textarea
+        onChange={valuesOnChange}
+        value={inputValues.content}
+        name="content"
+        placeholder="Take a note..."
+        onFocus={() => setExtended(true)}
+        rows={isExtended ? 3 : 1}
+      />
+      <Zoom in={isExtended}>
+        <Fab onClick={addNote} type="button">
+          <AddIcon titleAccess="add" />
+        </Fab>
+      </Zoom>
     </form>
-  )
-}
+  );
+};
 
 export default CreateArea;
